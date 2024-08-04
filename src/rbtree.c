@@ -3,14 +3,19 @@
 #include <stdlib.h>
 
 rbtree *new_rbtree(void) {
-  rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
+  rbtree* p = (rbtree *)calloc(1, sizeof(rbtree));
   // TODO: initialize struct if needed
+  node_t* nil = (node_t *)calloc(1, sizeof(node_t));
+  nil->color - RBTREE_BLACK;
+  p->nil = nil;
+  p->root = nil;
   return p;
 }
 
 void delete_rbtree(rbtree *t) {
   // TODO: reclaim the tree nodes's memory
-  free(t);
+
+    free(t);
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
