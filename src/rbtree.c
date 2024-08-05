@@ -6,16 +6,26 @@ rbtree *new_rbtree(void) {
   rbtree* p = (rbtree *)calloc(1, sizeof(rbtree));
   // TODO: initialize struct if needed
   node_t* nil = (node_t *)calloc(1, sizeof(node_t));
-  nil->color - RBTREE_BLACK;
+  nil->color = RBTREE_BLACK;
   p->nil = nil;
   p->root = nil;
   return p;
 }
 
+void delete_node_t (rbtree *t, node_t *node) {
+  // 후위순회로 서브트리 순차적으로 제거
+  if (node != t->nil) {
+    delete_node_t(t, node->left);
+    delete_node_t(t, node->right);
+    free(node);
+  }  
+}
+
 void delete_rbtree(rbtree *t) {
   // TODO: reclaim the tree nodes's memory
-
-    free(t);
+  delete_node_t(t, t->root);
+  free(t->nil);
+  free(t);
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
