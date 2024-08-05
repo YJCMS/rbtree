@@ -28,8 +28,98 @@ void delete_rbtree(rbtree *t) {
   free(t);
 }
 
+// insert에 사용할 left_rotate 함수
+void left_rotate(rbtree *t, node_t *x) {
+  node_t *y = x->right;
+  x->right = y->left;
+
+  if (y->left != t->nil) {
+    y->left->parent = x;
+  }
+
+  y->parent = x->parent;
+
+  if (x->parent != t->nil) {
+    t->root == t;
+  } else if (x == x->parent->left) {
+      x->parent->left = y;
+  } else {
+      x->parent->left = y;
+  }
+
+  y->left = x;
+  x->parent = y;
+}
+
+// insert에 사용할 right_rotate 함수
+void right_rotate(rbtree *t, node_t *x) {
+  node_t *y = x->left;
+  x->left = y->right;
+
+  if (y->right != t->nil) {
+    y->right->parent = x;
+  }
+
+  y->parent = x->parent;
+
+  if (x->parent != t->nil) {
+    t->root == t;
+  } else if (x == x->parent->right) {
+      x->parent->right = y;
+  } else {
+      x->parent->right = y;
+  }
+
+  y->right = x;
+  x->parent = y;
+}
+
+// insert에 사용할 insert_fixup함수
+void insert_fixup(rbtree *t, node_t *z) {
+  while (z->parent->color == RBTREE_RED) { // case 1, 2, 3 모두 부모가 red
+    if (z->parent == z->parent->parent->left) { // z의 부모가 왼쪽 자식일 경우
+
+      node_t *y = z->parent->parent->right; // z의 삼촌
+
+      if (y->color == RBTREE_BLACK) { // z의case1 삽입된 red노드의 부모와 삼촌 모두 red인 경우
+        z->parent->color = RBTREE_BLACK; 
+        y->color = RBTREE_BLACK;
+        z->parent->parent->color = RBTREE_RED;
+        z = z->parent->parent;
+      } else {
+          if(z == z->parent->right) {  // case2
+            z = z->parent; 
+            left_rotate(t, z);
+          }
+          z->parent->color = RBTREE_BLACK;  // case3
+          z->parent->parent->color = RBTREE_RED;
+          right_rotate(t, z->parent->parent);
+      }
+    } else {
+        node_t *y =  z->parent->parent->left; // 방향 외에는 위의 코드와 같음
+
+        if(y->color == RBTREE_RED) {
+          z->parent->color = RBTREE_BLACK;
+          y->color = RBTREE_BLACK;
+          z->parent->parent->color = RBTREE_RED;
+          z = z->parent->parent;
+        } else {
+          if (z == z->parent->left) {
+            z = z->parent;
+            right_rotate(t, z);
+          } 
+          z->parent->color = RBTREE_BLACK;
+          z->parent->parent->color = RBTREE_RED;
+          left_rotate(t, z->parent->parent);
+        }
+    }
+  }
+  t->root->color = RBTREE_BLACK;
+}
+
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   // TODO: implement insert
+  
   return t->root;
 }
 
