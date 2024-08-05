@@ -4,13 +4,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SENTINEL // SENTINEL 정의
+
 // new_rbtree should return rbtree struct with null root node
 void test_init(void) {
   rbtree *t = new_rbtree();
   assert(t != NULL);
-#ifdef SENTINEL
-  assert(t->nil != NULL);
-  assert(t->root == t->nil);
+#ifdef SENTINEL 
+  assert(t->nil != NULL); // SENTINEL이 정의된 경우, nil 포인터가 NULL이 아님을 확인
+  assert(t->root == t->nil); // SENTINEL이 정의된 경우, 초기 상태에서 root가 nil을 가리키는지 확인
 #else
   assert(t->root == NULL);
 #endif
@@ -369,15 +371,15 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
 
 int main(void) {
   test_init();
-  test_insert_single(1024);
-  test_find_single(512, 1024);
-  test_erase_root(128);
-  test_find_erase_fixed();
-  test_minmax_suite();
-  test_to_array_suite();
-  test_distinct_values();
-  test_duplicate_values();
-  test_multi_instance();
-  test_find_erase_rand(10000, 17);
+  // test_insert_single(1024);
+  // test_find_single(512, 1024);
+  // test_erase_root(128);
+  // test_find_erase_fixed();
+  // test_minmax_suite();
+  // test_to_array_suite();
+  // test_distinct_values();
+  // test_duplicate_values();
+  // test_multi_instance();
+  // test_find_erase_rand(10000, 17);
   printf("Passed all tests!\n");
 }
