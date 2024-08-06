@@ -268,7 +268,7 @@ void test_color_constraint(const rbtree *t) {
 }
 
 // rbtree should keep search tree and color constraints
-void test_rb_constraints(const key_t arr[], const size_t n) {
+void test_rb_constraints(const key_t arr[], const size_t n) { 
   rbtree *t = new_rbtree();
   assert(t != NULL);
 
@@ -372,13 +372,13 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
 int main(void) {
   test_init();
   test_insert_single(1024);
-  // test_find_single(512, 1024);
+  test_find_single(512, 1024);
   // test_erase_root(128);
   // test_find_erase_fixed();
   // test_minmax_suite();
   // test_to_array_suite();
-  // test_distinct_values();
-  // test_duplicate_values();
+  test_distinct_values();
+  test_duplicate_values();
   // test_multi_instance();
   // test_find_erase_rand(10000, 17);
   printf("Passed all tests!\n");
