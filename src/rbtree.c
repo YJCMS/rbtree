@@ -99,7 +99,7 @@ void insert_fixup(rbtree *t, node_t *z) {
 
         node_t *y =  z->parent->parent->left; // 방향 외에는 위의 코드와 같음
 
-        if(y->color == RBTREE_RED) {
+        if(y->color == RBTREE_RED) { // z의case1 삽입된 red노드의 부모와 삼촌 모두 red인 경우
           z->parent->color = RBTREE_BLACK;
           y->color = RBTREE_BLACK;
           z->parent->parent->color = RBTREE_RED;
@@ -320,12 +320,26 @@ int rbtree_erase(rbtree *t, node_t *p) {
   return 0;
 }
 
+void inorder(const rbtree *t, node_t *x, key_t *arr, int* i, size_t n) {
+  if(x != t->nil && *i < n) {
+    inorder(t, x->left, arr, i, n);
+    arr[(*i)++] = x->key;
+    inorder(t, x->right, arr, i, n);
+  }
+}
+
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   // TODO: implement to_array
-  for (int i = 0; i < n; i++) {
-    node_t *min = rbtree_min(t);
-    arr[i] = min->key;
-    rbtree_erase(t, min);
-  }
+  int size = 0;
+  int *i = &size;
+  inorder(t, t->root, arr, i, n);
   return 0;
+
+  // min값으로 구하는 방법
+  // for (int i = 0; i < n; i++) {
+  //   node_t *min = rbtree_min(t);
+  //   arr[i] = min->key;
+  //   rbtree_erase(t, min);
+  // }
+  // return 0;
 }
