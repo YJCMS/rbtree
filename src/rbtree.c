@@ -169,23 +169,40 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
   return NULL;
 }
 
-
 node_t *rbtree_min(const rbtree *t) {
   // TODO: implement find
-  node_t *x = t->root;
+  node_t *x = t->root; 
+
   while (x->left != t->nil) {
     x = x->left;
   }
+
   return x;
 }
 
 node_t *rbtree_max(const rbtree *t) {
   // TODO: implement find
   node_t *x = t->root;
+
   while (x->right != t->nil) {
     x = x->right;
   }
+
   return x;
+}
+
+node_t *tree_minimum(const rbtree *t, node_t *sub_r) {
+  node_t *new_r = sub_r;
+
+  if (new_r == t->nil) {
+    return new_r;
+  } 
+
+  while (new_r->left != t->nil) {
+    new_r = new_r->left;
+  }
+
+  return new_r;
 }
 
 void rb_transplant(rbtree *t, node_t *u, node_t *v) {
@@ -255,11 +272,18 @@ void rb_delete_fixup(rbtree *t, node_t *x) {
           x = t->root;
       }
     }
-  }
+  } 
+  x->color = RBTREE_BLACK;
 }
 
 int rbtree_erase(rbtree *t, node_t *p) {
   // TODO: implement erase
+
+  //p가 없는 노드이면 삭제 작업 안함
+  if (p == NULL) {
+    return 0;
+  }
+
   node_t *y = p;
   color_t y_original_color = y->color;
   // x를 위에 선언 해보기
@@ -272,7 +296,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
     x = p->left;
     rb_transplant(t, p, p->left); // p를 왼쪽 자식으로 바꾸기
   } else {
-      y = rbtree_min(p->right); // y는 p의 후손
+      y = tree_minimum(t, p->right); // y는 p의 후손
       y_original_color = y->color;
       x = y->right;
       if(y != p->right) { // y가 트리에서 더 아래쪽인지 확인
@@ -281,16 +305,19 @@ int rbtree_erase(rbtree *t, node_t *p) {
         y->right->parent = y; // y의 오른쪽 자식
       } else {
         x->parent = y; // x가 nil인 경우  
-        rb_transplant(t, p, y); // p를 그 후손인 y로 바꾸기
-        y->left = p->left; // p의 왼쪽 자식을 y에 부여
-        y->left->parent = y; // 왼쪽 자식이 없는 y
-        y->color = p->color;
       }
+      rb_transplant(t, p, y); // p를 그 후손인 y로 바꾸기
+      y->left = p->left; // p의 왼쪽 자식을 y에 부여
+      y->left->parent = y; // 왼쪽 자식이 없는 y
+      y->color = p->color; 
   }
 
   if (y_original_color == RBTREE_BLACK) { // 규칙을 위반할 경우
     rb_delete_fixup(t, x); // 수정
   }
+
+  free(p);
+  return 0;
 }
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
